@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== Loot Drop Idea Search ==="
+echo "=== Productfound Idea Search ==="
 echo ""
 
 MODEL=""
@@ -45,7 +45,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-CMD="loot search"
+CMD="productfound search"
 [ -n "$MODEL" ] && CMD="$CMD --model \"$MODEL\""
 [ -n "$EFFORT" ] && CMD="$CMD --effort \"$EFFORT\""
 [ -n "$SPEED" ] && CMD="$CMD --speed \"$SPEED\""
@@ -59,6 +59,6 @@ CMD="$CMD --count $COUNT"
 echo "Running: $CMD"
 echo ""
 eval $CMD 2>/dev/null || {
-  echo "ERROR: loot CLI not found. Install with: pip install loot-cli" >&2
+  echo "ERROR: productfound CLI not found. Install with: pip install productfound" >&2
   exit 1
 }

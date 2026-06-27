@@ -10,6 +10,14 @@ from loot_cli.display import (
 from loot_cli.analyze import (
     market_gap_analysis, competitive_analysis, persona_analysis, trend_analysis,
 )
+from loot_cli.analyze_postmortems import (
+    get_all as get_all_pm,
+    search as pm_search,
+    region_summary as pm_region_summary,
+    failure_reasons as pm_failure_reasons,
+    category_breakdown as pm_category_breakdown,
+    compare_regions as pm_compare_regions,
+)
 
 
 def cmd_search(args):
@@ -184,18 +192,85 @@ def cmd_filters(args):
     print("\nPersonas:")
     for p in get_unique_values(ideas, "persona"):
         print(f"  {p}")
-    print("\nTags (first 30):")
-    tags = get_all_tags(ideas)
-    for t in tags[:30]:
-        print(f"  {t}")
-    print(f"  ... and {len(tags)-30} more")
+
+
+def format_funding(val):
+    if val >= 1e9:
+        return f"${val/1e9:.1f}B"
+    elif val >= 1e6:
+        return f"${val/1e6:.0f}M"
+    else:
+        return "N/A"
+
+
+def cmd_pm_search(args):
+    results = pm_search(
+        region=args.region,
+        category=args.category,
+        failure_reason=args.reason,
+        keyword=args.keyword,
+    )
+    if not results:
+        print("No matching postmortems found.")
+        return
+    print(f"\n{'Company':<22} {'Region':<10} {'Category':<16} {'Funding':<12} {'Failure Reason'}")
+    print("-" * 90)
+    for p in results:
+        print(f"{p['title']:<22} {p['region']:<10} {p['category']:<16} {p['funding']:<12} {p['failure_reason']}")
+    print(f"\n{len(results)} postmortems found.")
+
+
+def cmd_pm_stats(args):
+    all_pm = get_all_pm()
+    regions, total_funding = pm_region_summary()
+    reasons = pm_failure_reasons()
+    cats, funding_by_cat = pm_category_breakdown()
+
+    print(f"\n=== Global Postmortem Dataset ===")
+    print(f"Total companies: {len(all_pm)}")
+    print(f"Total capital lost: ${sum(total_funding.values())/1e9:.1f}B")
+    print(f"Regions covered: {len(regions)}")
+    print(f"Categories covered: {len(cats)}")
+    print()
+
+    print("By Region:")
+    for r, n in regions.most_common():
+        print(f"  {r:<12} {n:>3} companies — {format_funding(total_funding.get(r, 0))}")
+    print()
+
+    print("Failure Reasons:")
+    for r, n in reasons.most_common():
+        print(f"  {r:<25} {n:>2}")
+    print()
+
+    print("By Category:")
+    for c, n in cats.most_common():
+        print(f"  {c:<16} {n:>2} companies — {format_funding(funding_by_cat.get(c, 0))} lost")
+
+
+def cmd_pm_compare(args):
+    pm_compare_regions(args.region1, args.region2)
+    result = pm_compare_regions(args.region1, args.region2)
+    r1 = result[args.region1]
+    r2 = result[args.region2]
+
+    print(f"\n{'':<20} {args.region1:<30} {args.region2}")
+    print("-" * 70)
+    print(f"{'Companies':<20} {r1['count']:<30} {r2['count']}")
+    print(f"{'Capital lost':<20} {format_funding(r1['funding']):<30} {format_funding(r2['funding'])}")
+    print(f"{'Top reasons':<20}")
+    for i in range(max(len(r1['top_reasons']), len(r2['top_reasons']))):
+        r1r = f"{r1['top_reasons'][i][0]} ({r1['top_reasons'][i][1]})" if i < len(r1['top_reasons']) else ""
+        r2r = f"{r2['top_reasons'][i][0]} ({r2['top_reasons'][i][1]})" if i < len(r2['top_reasons']) else ""
+        print(f"  {i+1}.{r1r:<48} {r2r}")
+    print()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="loot",
-        description="🔍 Loot Drop Market Researcher — Analyze 1,000 startup ideas from failed startups.",
-        epilog="More info: https://github.com/loot-drop/loot-cli",
+        prog="productfound",
+        description="Productfound — Market research from 1,000 failed startups.",
+        epilog="More info: https://github.com/jithindeepjc/productfound",
     )
     sub = parser.add_subparsers(dest="command")
 
@@ -254,12 +329,32 @@ def main():
     p_filters = sub.add_parser("filters", help="Show all available filter values")
     p_filters.set_defaults(func=cmd_filters)
 
+    # Postmortems commands
+    p_pm = sub.add_parser("postmortems", help="Analyze real failed startup postmortems worldwide")
+    p_pm_sub = p_pm.add_subparsers(dest="pm_cmd")
+
+    p_pm_search = p_pm_sub.add_parser("search", help="Search postmortems by region, category, keyword")
+    p_pm_search.add_argument("--region", choices=["India", "US", "Europe", "SEA", "LATAM", "Africa", "Global"], help="Filter by region")
+    p_pm_search.add_argument("--category", help="Filter by industry category")
+    p_pm_search.add_argument("--reason", help="Filter by failure reason keyword")
+    p_pm_search.add_argument("--keyword", "-k", help="Search by company name or description")
+    p_pm_search.set_defaults(func=cmd_pm_search)
+
+    p_pm_stats = p_pm_sub.add_parser("stats", help="Postmortem dataset statistics")
+    p_pm_stats.set_defaults(func=cmd_pm_stats)
+
+    p_pm_compare = p_pm_sub.add_parser("compare", help="Compare failure patterns across regions")
+    p_pm_compare.add_argument("region1", help="First region (India, US, Europe, SEA, LATAM, Africa, Global)")
+    p_pm_compare.add_argument("region2", help="Second region")
+    p_pm_compare.set_defaults(func=cmd_pm_compare)
+
     args = parser.parse_args()
     if args.command:
         args.func(args)
     else:
         parser.print_help()
-        print("\nTIP: Run 'loot filters' to see available filter values.")
-        print("     Run 'loot search --category DevTools' to search ideas.")
-        print("     Run 'loot analyze stats' for dataset overview.")
-        print("     Run 'loot random' for random ideas.")
+        print("\nTIP: Run 'productfound filters' to see available filter values.")
+        print("     Run 'productfound search --category DevTools' to search ideas.")
+        print("     Run 'productfound analyze stats' for dataset overview.")
+        print("     Run 'productfound random' for random ideas.")
+        print("     Run 'productfound postmortems search --region India' for real failure data.")

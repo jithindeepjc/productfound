@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== Loot Drop Market Analysis ==="
+echo "=== Productfound Market Analysis ==="
 echo ""
 
 ANALYSIS_TYPE="${1:-gaps}"
@@ -10,34 +10,34 @@ case "$ANALYSIS_TYPE" in
   gaps|market-gaps)
     echo "Analyzing market gaps — identifying underserved vs crowded categories..."
     echo ""
-    loot analyze gaps
+    productfound analyze gaps
     ;;
   competitive)
     CATEGORY="${2:-}"
     if [ -n "$CATEGORY" ]; then
       echo "Competitive analysis for: $CATEGORY"
       echo ""
-      loot analyze competitive --category "$CATEGORY"
+      productfound analyze competitive --category "$CATEGORY"
     else
       echo "Competitive landscape across all categories..."
       echo ""
-      loot analyze competitive
+      productfound analyze competitive
     fi
     ;;
   persona)
     echo "Persona-based opportunity breakdown..."
     echo ""
-    loot analyze persona
+    productfound analyze persona
     ;;
   trends)
     echo "Trend analysis — models by effort, tags by monetization speed..."
     echo ""
-    loot analyze trends
+    productfound analyze trends
     ;;
   stats)
     echo "Dataset statistics..."
     echo ""
-    loot analyze stats
+    productfound analyze stats
     ;;
   *)
     echo "Usage: analyze-market.sh [type]"

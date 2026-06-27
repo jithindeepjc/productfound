@@ -8,22 +8,19 @@
       <stop offset="0%" stop-color="#f59e0b"/>
       <stop offset="100%" stop-color="#ef4444"/>
     </linearGradient>
-    <linearGradient id="tail" x1="100%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.5"/>
-    </linearGradient>
   </defs>
 
-  <!-- Tail -->
-  <path d="M140 290 Q200 250 256 222"
-        stroke="url(#tail)" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <path d="M170 270 Q210 245 254 228"
-        stroke="url(#tail)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <!-- Outer ring - the product space / market -->
+  <circle cx="200" cy="200" r="150" stroke="url(#g1)" stroke-width="4" opacity="0.15" fill="none"/>
 
-  <!-- Diamond -->
-  <path d="M256 222 L268 200 L256 178 L244 200 Z" fill="url(#g1)"/>
-  <path d="M256 222 L256 178 L244 200 Z" fill="rgba(255,255,255,0.1)"/>
+  <!-- P letterform - bold geometric -->
+  <path d="M160 130 L160 270 M160 130 L220 130 C255 130 265 150 265 175 C265 200 255 220 220 220 L160 220"
+        stroke="url(#g1)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
-  <!-- Core -->
-  <path d="M256 192 C264 208 256 222 256 222 C256 222 248 208 256 192Z" fill="url(#g2)" opacity="0.85"/>
+  <!-- Discovery dot - the "found" element -->
+  <circle cx="248" cy="262" r="12" fill="url(#g2)"/>
+
+  <!-- Subtle arc suggesting orbit/discovery path -->
+  <path d="M220 230 Q270 240 248 262"
+        stroke="url(#g2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
 </svg>

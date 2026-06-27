@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== Loot Drop Competitive Intelligence ==="
+echo "=== Productfound Competitive Intelligence ==="
 echo ""
 
 CATEGORY="${1:-}"
@@ -16,7 +16,7 @@ if [ -z "$CATEGORY" ]; then
   echo "  competitive-intel.sh Fintech"
   echo ""
   echo "Available categories:"
-  loot categories 2>/dev/null || echo "  (install loot CLI: pip install loot-cli)"
+  productfound categories 2>/dev/null || echo "  (install productfound CLI: pip install productfound)"
   exit 1
 fi
 
@@ -24,8 +24,8 @@ echo "Competitive intelligence for: $CATEGORY"
 echo ""
 
 # Full competitive analysis for this category
-loot analyze competitive --category "$CATEGORY" 2>/dev/null || {
-  echo "ERROR: loot CLI not found. Install with: pip install loot-cli" >&2
+productfound analyze competitive --category "$CATEGORY" 2>/dev/null || {
+  echo "ERROR: productfound CLI not found. Install with: pip install productfound" >&2
   exit 1
 }
 
@@ -33,14 +33,14 @@ echo "---"
 echo "Ideas in this category:"
 echo ""
 
-SEARCH_CMD="loot search --category \"$CATEGORY\" --all"
+SEARCH_CMD="productfound search --category \"$CATEGORY\" --all"
 [ -n "$KEYWORD" ] && SEARCH_CMD="$SEARCH_CMD --keyword \"$KEYWORD\""
 eval $SEARCH_CMD
 
 echo ""
 echo "--- Tags in this category ---"
-loot tags --category "$CATEGORY" --counts 2>/dev/null
+productfound tags --category "$CATEGORY" --counts 2>/dev/null
 
 echo ""
 echo "--- Recommended models for $CATEGORY ---"
-loot search --category "$CATEGORY" --all --detail 2>/dev/null | grep -i "Model:" | sort | uniq -c | sort -rn
+productfound search --category "$CATEGORY" --all --detail 2>/dev/null | grep -i "Model:" | sort | uniq -c | sort -rn

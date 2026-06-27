@@ -1,11 +1,11 @@
-# loot CLI
+# productfound CLI
 
-Command-line market research tool for the Loot Drop dataset — 1,000 startup ideas derived from failed startup postmortems.
+Command-line market research tool for the Productfound dataset — 1,000 startup ideas derived from failed startup postmortems.
 
 ## Install
 
 ```bash
-pip install loot-cli
+pip install productfound
 ```
 
 Or from source:
@@ -18,22 +18,22 @@ pip install -e .
 ## Usage
 
 ```
-loot [command] [options]
+productfound [command] [options]
 ```
 
 ### Commands
 
 | Command | Description |
 |---------|-------------|
-| `loot search` | Search and filter ideas |
-| `loot analyze` | Market analysis (gaps, competitive, persona, trends, stats) |
-| `loot validate` | 4-axis stress-test with verdict |
-| `loot random` | Random idea exploration |
-| `loot tags` | Browse tag taxonomy |
-| `loot models` | List business models |
-| `loot categories` | List industry categories |
-| `loot filters` | Show available filter values |
-| `loot export` | Export dataset to JSON or CSV |
+| `productfound search` | Search and filter ideas |
+| `productfound analyze` | Market analysis (gaps, competitive, persona, trends, stats) |
+| `productfound validate` | 4-axis stress-test with verdict |
+| `productfound random` | Random idea exploration |
+| `productfound tags` | Browse tag taxonomy |
+| `productfound models` | List business models |
+| `productfound categories` | List industry categories |
+| `productfound filters` | Show available filter values |
+| `productfound export` | Export dataset to JSON or CSV |
 
 ### Search filters
 
@@ -51,19 +51,19 @@ loot [command] [options]
 
 ```bash
 # Find underserved categories
-loot analyze gaps
+productfound analyze gaps
 
 # Deep-dive into a category
-loot analyze competitive --category Fintech
+productfound analyze competitive --category Fintech
 
 # Search for weekend projects
-loot search --effort "Weekend Project" --speed "Quick Cash"
+productfound search --effort "Weekend Project" --speed "Quick Cash"
 
 # Validate an idea
-loot analyze validate --category DevTools --model SaaS
+productfound analyze validate --category DevTools --model SaaS
 
 # Export for custom analysis
-loot export --format csv --output ideas.csv
+productfound export --format csv --output ideas.csv
 ```
 
 ## Data
