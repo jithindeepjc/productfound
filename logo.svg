@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
   <defs>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="50%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
     </linearGradient>
     <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#f59e0b"/>
@@ -11,74 +10,20 @@
     </linearGradient>
     <linearGradient id="tail" x1="100%" y1="100%" x2="0%" y2="0%">
       <stop offset="0%" stop-color="#7c3aed" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.5"/>
     </linearGradient>
   </defs>
 
-  <style>
-    @keyframes shoot {
-      0% { transform: translate(0, 0); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translate(-80px, 80px); opacity: 0; }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.1); }
-    }
-    @keyframes sparkle {
-      0%, 100% { opacity: 0; transform: scale(0); }
-      30% { opacity: 1; transform: scale(1); }
-      60% { opacity: 0.6; transform: scale(0.8); }
-    }
-    @keyframes orbit {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .star { animation: shoot 3s ease-in-out infinite; transform-origin: 260px 220px; }
-    .pulse { animation: pulse 2s ease-in-out infinite; }
-    .spk1 { animation: sparkle 4s ease-in-out infinite; }
-    .spk2 { animation: sparkle 4s ease-in-out 1s infinite; }
-    .spk3 { animation: sparkle 4s ease-in-out 2s infinite; }
-    .orbit { animation: orbit 8s linear infinite; transform-origin: 200px 200px; }
-  </style>
+  <!-- Tail -->
+  <path d="M140 290 Q200 250 256 222"
+        stroke="url(#tail)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M170 270 Q210 245 254 228"
+        stroke="url(#tail)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"/>
 
-  <!-- Subtle orbit ring -->
-  <circle cx="200" cy="200" r="140" fill="none" stroke="#7c3aed" stroke-width="0.5" opacity="0.15" class="orbit"/>
+  <!-- Diamond -->
+  <path d="M256 222 L268 200 L256 178 L244 200 Z" fill="url(#g1)"/>
+  <path d="M256 222 L256 178 L244 200 Z" fill="rgba(255,255,255,0.1)"/>
 
-  <!-- Shooting star group -->
-  <g class="star">
-    <!-- Tail trail -->
-    <path d="M140 300 Q200 260 258 222"
-          stroke="url(#tail)"
-          stroke-width="4"
-          stroke-linecap="round"
-          fill="none"
-          opacity="0.6"/>
-    <path d="M170 280 Q210 255 254 228"
-          stroke="url(#tail)"
-          stroke-width="2"
-          stroke-linecap="round"
-          fill="none"
-          opacity="0.3"/>
-
-    <!-- Diamond star -->
-    <path d="M258 222 L270 200 L258 178 L246 200 Z"
-          fill="url(#g1)"/>
-    <!-- Inner highlight -->
-    <path d="M258 222 L258 178 L246 200 Z"
-          fill="rgba(255,255,255,0.15)"/>
-
-    <!-- Core drop inside the star -->
-    <path d="M258 192 C268 210 258 226 258 226 C258 226 248 210 258 192Z"
-          fill="url(#g2)" opacity="0.85"/>
-  </g>
-
-  <!-- Sparkle particles -->
-  <circle cx="180" cy="240" r="2" fill="#a78bfa" class="spk1"/>
-  <circle cx="300" cy="160" r="2.5" fill="#c4b5fd" class="spk2"/>
-  <circle cx="140" cy="180" r="1.5" fill="#7c3aed" class="spk3"/>
-
-  <!-- Background subtle glow -->
-  <circle cx="258" cy="200" r="30" fill="#7c3aed" opacity="0.06" class="pulse"/>
+  <!-- Core -->
+  <path d="M256 192 C264 208 256 222 256 222 C256 222 248 208 256 192Z" fill="url(#g2)" opacity="0.85"/>
 </svg>
