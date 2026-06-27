@@ -8,7 +8,7 @@ setup(
     install_requires=["rich>=13.0"],
     entry_points={
         "console_scripts": [
-            "productfound=loot_cli.cli:main",
+            "productfound=productfound.cli:main",
         ],
     },
 )

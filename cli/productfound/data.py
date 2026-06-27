@@ -6,7 +6,7 @@ import io
 DATA = None
 
 def get_data_b64():
-    from loot_cli.data_b64 import DATA_B64
+    from productfound.data_b64 import DATA_B64
     return DATA_B64
 
 def load_ideas(force_reload=False):

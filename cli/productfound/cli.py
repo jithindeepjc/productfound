@@ -2,15 +2,15 @@ import argparse
 import sys
 import random
 
-from loot_cli.data import load_ideas, filter_ideas, get_unique_values, get_all_tags, compute_stats
-from loot_cli.display import (
+from productfound.data import load_ideas, filter_ideas, get_unique_values, get_all_tags, compute_stats
+from productfound.display import (
     print_ideas, print_idea_detail, print_stats, print_market_gap,
     print_competitive_analysis, print_persona_breakdown, print_tags,
 )
-from loot_cli.analyze import (
+from productfound.analyze import (
     market_gap_analysis, competitive_analysis, persona_analysis, trend_analysis,
 )
-from loot_cli.analyze_postmortems import (
+from productfound.analyze_postmortems import (
     get_all as get_all_pm,
     search as pm_search,
     region_summary as pm_region_summary,

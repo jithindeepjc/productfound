@@ -15,7 +15,7 @@ dependencies = [
 keywords = ["startup", "market-research", "failure-analysis", "business-ideas"]
 
 [project.scripts]
-productfound = "loot_cli.cli:main"
+productfound = "productfound.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["loot_cli*"]
+include = ["productfound*"]

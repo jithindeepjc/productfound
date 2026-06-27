@@ -2,25 +2,45 @@
   <defs>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#6366f1"/>
       <stop offset="100%" stop-color="#4f46e5"/>
     </linearGradient>
     <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="50%" stop-color="#f97316"/>
       <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.08"/>
     </linearGradient>
   </defs>
 
-  <!-- Outer ring - the product space / market -->
-  <circle cx="200" cy="200" r="150" stroke="url(#g1)" stroke-width="4" opacity="0.15" fill="none"/>
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="url(#g3)"/>
 
-  <!-- P letterform - bold geometric -->
-  <path d="M160 130 L160 270 M160 130 L220 130 C255 130 265 150 265 175 C265 200 255 220 220 220 L160 220"
-        stroke="url(#g1)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Bold P letterform -->
+  <path d="M140 100 L140 300 M140 100 L215 100 C260 100 275 130 275 170 C275 210 260 240 215 240 L140 240"
+        stroke="url(#g1)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
-  <!-- Discovery dot - the "found" element -->
-  <circle cx="248" cy="262" r="12" fill="url(#g2)"/>
+  <!-- Inner loop highlight -->
+  <path d="M160 120 L205 120 C240 120 252 142 252 170 C252 198 240 220 205 220 L160 220"
+        stroke="url(#g2)" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.3"/>
 
-  <!-- Subtle arc suggesting orbit/discovery path -->
-  <path d="M220 230 Q270 240 248 262"
-        stroke="url(#g2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.3"/>
+  <!-- Discovery star in the P counter -->
+  <g transform="translate(200 170)">
+    <!-- 4-pointed star -->
+    <path d="M0 -14 L3 -4 L14 -4 L5 2 L8 13 L0 6 L-8 13 L-5 2 L-14 -4 L-3 -4 Z"
+          fill="url(#g2)"/>
+  </g>
+
+  <!-- Accent dot (the "found" marker) -->
+  <circle cx="260" cy="280" r="10" fill="url(#g2)"/>
+
+  <!-- Trailing arc suggesting discovery path -->
+  <path d="M230 240 Q270 250 258 270"
+        stroke="url(#g2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.25"/>
+
+  <!-- Subtle ring -->
+  <circle cx="200" cy="200" r="155" stroke="url(#g1)" stroke-width="0.5" opacity="0.1" fill="none"/>
 </svg>
