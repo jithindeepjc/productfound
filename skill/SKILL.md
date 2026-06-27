@@ -543,7 +543,7 @@ signal exists to act on the caution.
 ## Programmatic Access
 
 Power users who want shell/pipeline access:
-- CLI: `/root/bis/cli/` and `/root/loot-drop-tools/cli/`
+- CLI: `./cli/` (or the `loot` command after `pip install .`)
 - Same 9-field schema, same filters — outputs JSON
 - Skill and CLI are interchangeable
 
