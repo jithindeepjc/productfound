@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <!-- Outer ring (the market) with a gap -->
+  <path d="M200 40 A160 160 0 1 1 120 347"
+        stroke="#7c3aed" stroke-width="6" stroke-linecap="round"/>
+  <!-- The piece that dropped out (the loot) -->
+  <path d="M185 340 L200 310 L215 340 L200 370 Z"
+        fill="#7c3aed"/>
+  <!-- Connecting arc showing the drop path -->
+  <path d="M158 326 Q170 336 185 340"
+        stroke="#7c3aed" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+</svg>
