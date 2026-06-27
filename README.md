@@ -1,6 +1,13 @@
-# Loot Drop Tools
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="logo.svg">
+    <img src="logo.svg" alt="Loot Drop" width="120">
+  </picture>
+</p>
 
-**Market research toolkit** powered by the Loot Drop startup failure graveyard — 1,000+ ideas extracted from real failed startup postmortems.
+<h1 align="center">Loot Drop Tools</h1>
+
+<p align="center"><b>Market research toolkit</b> powered by the Loot Drop startup failure graveyard — 1,000+ ideas extracted from real failed startup postmortems.</p>
 
 ## What's Inside
 
