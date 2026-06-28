@@ -124,3 +124,179 @@ def trend_analysis(ideas):
         "models_by_effort": models_by_effort,
         "tags_by_speed": tags_by_speed,
     }
+
+
+def compare_ideas(ideas, names):
+    results = []
+    from productfound.postmortems_data import POSTMORTEMS
+    for name in names:
+        name_lower = name.lower()
+        matches = [i for i in ideas if name_lower in (i.get("title") or "").lower()
+                   or name_lower in (i.get("desc") or "").lower()]
+        if matches:
+            idea = matches[0]
+            score = 50
+            risks = []
+            tags = idea.get("tags", [])
+            if "hardware" in tags or "regulatory" in tags:
+                risks.append("High barrier to entry")
+                score -= 15
+            if "crypto" in tags or "blockchain" in tags:
+                risks.append("Regulatory uncertainty")
+                score -= 10
+            if "enterprise" in tags:
+                risks.append("Long enterprise sales cycle")
+                score -= 5
+            effort = idea.get("effort", "?")
+            if effort in ("6+ Months", "3-6 Months"):
+                score -= 5 if effort == "3-6 Months" else 10
+            cat = idea.get("category", "?")
+            cat_count = sum(1 for i in ideas if i.get("category") == cat)
+            if cat_count < 10:
+                score += 15
+                risks.append(f"Unvalidated category ({cat_count} ideas in dataset)")
+            elif cat_count > 50:
+                score -= 10
+                risks.append(f"Crowded category ({cat_count} ideas)")
+
+            similar_failures = [p["title"] for p in POSTMORTEMS if p.get("category") == idea.get("category")][:3]
+
+            results.append({
+                "name": idea.get("title", name),
+                "score": max(0, min(100, score)),
+                "category": idea.get("category", "?"),
+                "model": idea.get("model", "?"),
+                "effort": effort,
+                "speed": idea.get("speed", "?"),
+                "persona": idea.get("persona", "?"),
+                "risks": risks,
+                "verdict": "Go" if score >= 60 else ("Pivot" if score >= 30 else "Avoid"),
+                "similar_failures": similar_failures,
+            })
+        else:
+            cat = _guess_category(name, ideas)
+            results.append({
+                "name": name,
+                "score": 40,
+                "category": cat,
+                "model": "Unknown",
+                "effort": "Unknown",
+                "speed": "Unknown",
+                "persona": "Unknown",
+                "risks": ["No direct dataset match — unvalidated concept"],
+                "verdict": "Needs Research",
+                "similar_failures": [],
+            })
+    return results
+
+
+def _guess_category(name, ideas):
+    cats = set(i.get("category", "") for i in ideas)
+    keyword_map = {
+        "ai": "DevTools", "app": "Mobile", "platform": "DevTools", "market": "Ecommerce",
+        "shop": "Ecommerce", "pay": "Fintech", "finance": "Fintech", "health": "Health",
+        "med": "Health", "learn": "EdTech", "edu": "EdTech", "green": "CleanTech",
+        "energy": "CleanTech", "food": "Food", "travel": "Travel", "game": "Gaming",
+        "crypto": "Crypto", "blockchain": "Crypto", "social": "Social", "media": "Media",
+        "real": "PropTech", "estate": "PropTech", "dev": "DevTools", "tool": "DevTools",
+        "saas": "DevTools", "logistics": "Logistics", "delivery": "Logistics",
+    }
+    name_lower = name.lower()
+    for keyword, cat in keyword_map.items():
+        if keyword in name_lower:
+            return cat
+    return "General"
+
+
+def assess_product(ideas, name, desc=""):
+    from productfound.postmortems_data import POSTMORTEMS
+
+    name_lower = name.lower()
+    matches = [i for i in ideas if name_lower in (i.get("title") or "").lower()
+               or name_lower in (i.get("desc") or "").lower()
+               or any(name_lower in t.lower() for t in (i.get("tags") or []))]
+    if desc:
+        matches.extend([i for i in ideas if desc.lower()[:30] in (i.get("desc") or "").lower()])
+    matches = list({i.get("id"): i for i in matches}.values())
+
+    if matches:
+        idea = matches[0]
+        cat = idea.get("category", "General")
+        cat_count = sum(1 for i in ideas if i.get("category") == cat)
+        category_fit = "Strong" if matches else "Weak"
+        competitive_density = "Low"
+        if cat_count < 10:
+            competitive_density = "Very Low (first mover)"
+        elif cat_count < 30:
+            competitive_density = "Moderate"
+        elif cat_count < 60:
+            competitive_density = "High"
+        else:
+            competitive_density = "Very High (crowded)"
+
+        strengths = []
+        risks = []
+        tags = idea.get("tags", [])
+
+        if competitive_density in ("Very Low", "Low"):
+            strengths.append("First-mover opportunity in this category")
+        if idea.get("effort") in ("Weekend Project", "1-3 Months"):
+            strengths.append("Low time-to-market")
+        if idea.get("speed") == "Quick Cash":
+            strengths.append("Fast monetization potential")
+        if idea.get("model") in ("Subscription/SaaS",):
+            strengths.append("Recurring revenue model")
+
+        if "hardware" in tags:
+            risks.append("Hardware complexity and supply chain risk")
+        if "regulatory" in tags:
+            risks.append("Regulatory compliance burden")
+        if "enterprise" in tags:
+            risks.append("Enterprise sales cycle (6-18 months)")
+        if "marketplace" in tags:
+            risks.append("Two-sided marketplace chicken-and-egg problem")
+        if competitive_density in ("High", "Very High"):
+            risks.append(f"Crowded category ({cat_count} ideas in dataset)")
+
+        all_pm_cats = set(p["category"] for p in POSTMORTEMS)
+        similar = [p["title"] for p in POSTMORTEMS if p.get("category") == cat and p.get("funding", "N/A") != "N/A"][:3]
+        if not similar:
+            similar = [p["title"] for p in POSTMORTEMS if p.get("category") in all_pm_cats][:3]
+
+        score = 50
+        if category_fit == "Strong":
+            score += 10
+        if competitive_density in ("Very Low", "Low"):
+            score += 15
+        elif competitive_density == "High":
+            score -= 10
+        elif competitive_density == "Very High":
+            score -= 15
+        if "hardware" in tags or "regulatory" in tags:
+            score -= 10
+        if idea.get("effort") in ("Weekend Project", "1-3 Months"):
+            score += 5
+        score = max(0, min(100, score))
+
+        return {
+            "product": name,
+            "score": score,
+            "category_fit": category_fit,
+            "competitive_density": competitive_density,
+            "strengths": strengths or ["Differentiated concept"],
+            "risks": risks or ["Unvalidated market assumptions"],
+            "similar_failures": similar,
+        }
+    else:
+        cat = _guess_category(name, ideas)
+        cat_count = sum(1 for i in ideas if i.get("category") == cat)
+        return {
+            "product": name,
+            "score": 35,
+            "category_fit": f"Assumed ({cat}) — no direct dataset match",
+            "competitive_density": "Low" if cat_count < 20 else "Moderate",
+            "strengths": ["Novel concept (no direct analog in dataset)"],
+            "risks": ["No dataset validation — unproven category fit",
+                      f"Category '{cat}' has {cat_count} reference ideas — limited signal"],
+            "similar_failures": [p["title"] for p in POSTMORTEMS if p.get("category") == cat][:3],
+        }

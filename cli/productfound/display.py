@@ -199,6 +199,95 @@ def print_persona_breakdown(analysis):
             print(f"  Signature: {data['signature']}")
 
 
+def print_assessment(assessment):
+    if HAS_RICH:
+        from rich.panel import Panel
+        score_color = "green" if assessment["score"] >= 70 else ("yellow" if assessment["score"] >= 40 else "red")
+        panel = Panel(
+            f"[bold]Product:[/bold] {assessment['product']}\n"
+            f"[bold]Overall Score:[/bold] [{score_color}]{assessment['score']}/100[/{score_color}]\n"
+            f"[bold]Category Fit:[/bold] {assessment['category_fit']}\n"
+            f"[bold]Competitive Density:[/bold] {assessment['competitive_density']}\n"
+            f"[bold]Key Strengths:[/bold]\n  "
+            + "\n  ".join(f"• {s}" for s in assessment["strengths"])
+            + f"\n[bold]Risk Factors:[/bold]\n  "
+            + "\n  ".join(f"• {r}" for r in assessment["risks"])
+            + f"\n[bold]Similar Failed Startups:[/bold]\n  "
+            + "\n  ".join(f"• {s}" for s in assessment.get("similar_failures", [])),
+            title="Product Assessment",
+            border_style=score_color,
+        )
+        console.print(panel)
+    else:
+        print(f"\n{'='*60}")
+        print(f"Product: {assessment['product']}")
+        print(f"Score: {assessment['score']}/100")
+        print(f"Category Fit: {assessment['category_fit']}")
+        print(f"Competitive Density: {assessment['competitive_density']}")
+        print(f"\nStrengths:")
+        for s in assessment["strengths"]:
+            print(f"  • {s}")
+        print(f"\nRisk Factors:")
+        for r in assessment["risks"]:
+            print(f"  • {r}")
+        print(f"\nSimilar Failed Startups:")
+        for s in assessment.get("similar_failures", []):
+            print(f"  • {s}")
+
+
+def print_comparison(comparison):
+    if HAS_RICH:
+        table = Table(title="Idea Comparison", box=box.MINIMAL, header_style="bold cyan")
+        table.add_column("Dimension")
+        for idea in comparison:
+            table.add_column(idea["name"], style="bold")
+        scores = [c.get("score", "?") for c in comparison]
+        table.add_row("Score", *[f"{s}/100" if isinstance(s, int) else s for s in scores])
+        cats = [c.get("category", "?") for c in comparison]
+        table.add_row("Category", *cats)
+        models = [c.get("model", "?") for c in comparison]
+        table.add_row("Model", *models)
+        efforts = [c.get("effort", "?") for c in comparison]
+        table.add_row("Effort", *efforts)
+        speeds = [c.get("speed", "?") for c in comparison]
+        table.add_row("Speed", *speeds)
+        personas = [c.get("persona", "?") for c in comparison]
+        table.add_row("Persona Fit", *personas)
+        risks = [", ".join(c.get("risks", [])[:2]) or "—" for c in comparison]
+        table.add_row("Key Risks", *risks)
+        console.print(table)
+
+        for i, c in enumerate(comparison):
+            v = c.get("verdict", "?")
+            score_val = c.get("score", 50)
+            color = "green" if score_val >= 70 else ("yellow" if score_val >= 40 else "red")
+            console.print(Panel(f"[bold]{v}[/bold]", title=c["name"], border_style=color))
+    else:
+        print(f"\n{'='*80}")
+        print(f"{'Dimension':<20}", end="")
+        for idea in comparison:
+            print(f" {idea['name']:<25}", end="")
+        print()
+        print("-" * 80)
+        scores = [c.get("score", "?") for c in comparison]
+        print(f"{'Score':<20}", *[f"{s}/100" if isinstance(s, int) else str(s) for s in scores])
+        cats = [c.get("category", "?") for c in comparison]
+        print(f"{'Category':<20}", *[f"{c:<25}" for c in cats])
+        models = [c.get("model", "?") for c in comparison]
+        print(f"{'Model':<20}", *[f"{m:<25}" for m in models])
+        efforts = [c.get("effort", "?") for c in comparison]
+        print(f"{'Effort':<20}", *[f"{e:<25}" for e in efforts])
+        speeds = [c.get("speed", "?") for c in comparison]
+        print(f"{'Speed':<20}", *[f"{s:<25}" for s in speeds])
+        personas = [c.get("persona", "?") for c in comparison]
+        print(f"{'Persona Fit':<20}", *[f"{p:<25}" for p in personas])
+        print()
+        for c in comparison:
+            print(f"\n{c['name']} — Verdict: {c.get('verdict', '?')}")
+            if c.get("risks"):
+                print("  Risks:", ", ".join(c["risks"][:3]))
+
+
 def print_tags(tags, counts=None):
     if HAS_RICH:
         if counts:

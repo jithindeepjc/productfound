@@ -6,9 +6,11 @@ from productfound.data import load_ideas, filter_ideas, get_unique_values, get_a
 from productfound.display import (
     print_ideas, print_idea_detail, print_stats, print_market_gap,
     print_competitive_analysis, print_persona_breakdown, print_tags,
+    print_assessment, print_comparison,
 )
 from productfound.analyze import (
     market_gap_analysis, competitive_analysis, persona_analysis, trend_analysis,
+    compare_ideas, assess_product,
 )
 from productfound.analyze_postmortems import (
     get_all as get_all_pm,
@@ -42,31 +44,65 @@ def cmd_search(args):
 
 
 def cmd_analyze(args):
+    import json as json_mod
     ideas = load_ideas()
     if args.type == "gaps" or args.type == "market-gaps":
         analysis = market_gap_analysis(ideas)
-        print_market_gap(analysis)
+        if args.json:
+            print(json_mod.dumps(analysis, indent=2))
+        else:
+            print_market_gap(analysis)
     elif args.type == "competitive":
         analysis = competitive_analysis(
             filter_ideas(ideas, category=args.category) if args.category else ideas
         )
-        print_competitive_analysis(analysis)
+        if args.json:
+            print(json_mod.dumps(analysis, indent=2))
+        else:
+            print_competitive_analysis(analysis)
     elif args.type == "persona":
         analysis = persona_analysis(ideas)
-        print_persona_breakdown(analysis)
+        if args.json:
+            print(json_mod.dumps(analysis, indent=2))
+        else:
+            print_persona_breakdown(analysis)
     elif args.type == "trends":
         trends = trend_analysis(ideas)
-        for effort, models in trends["models_by_effort"].items():
-            print(f"\n--- {effort} ---")
-            for model, count in models.most_common():
-                print(f"  {model:<20} {count}")
-        for speed, tags in trends["tags_by_speed"].items():
-            print(f"\n--- {speed} (top tags) ---")
-            for tag, count in tags.most_common(10):
-                print(f"  {tag:<25} {count}")
+        if args.json:
+            print(json_mod.dumps({k: dict(v) for k, v in trends.items()}, indent=2))
+        else:
+            for effort, models in trends["models_by_effort"].items():
+                print(f"\n--- {effort} ---")
+                for model, count in models.most_common():
+                    print(f"  {model:<20} {count}")
+            for speed, tags in trends["tags_by_speed"].items():
+                print(f"\n--- {speed} (top tags) ---")
+                for tag, count in tags.most_common(10):
+                    print(f"  {tag:<25} {count}")
     elif args.type == "stats":
         stats = compute_stats(ideas)
-        print_stats(stats)
+        if args.json:
+            print(json_mod.dumps(stats, indent=2))
+        else:
+            print_stats(stats)
+    elif args.type == "compare":
+        if not args.ideas:
+            print("Usage: productfound analyze compare \"Idea 1\" \"Idea 2\" [--json]")
+            return
+        analysis = compare_ideas(ideas, args.ideas)
+        if args.json:
+            print(json_mod.dumps(analysis, indent=2))
+        else:
+            print_comparison(analysis)
+    elif args.type == "assess":
+        if not args.product:
+            print("Usage: productfound analyze assess \"Product Name\" [--desc \"description\"] [--json]")
+            return
+        analysis = assess_product(ideas, args.product, args.desc or "")
+        if args.json:
+            print(json_mod.dumps(analysis, indent=2))
+        else:
+            print_assessment(analysis)
 
 
 def cmd_random(args):
@@ -288,9 +324,13 @@ def main():
     p_search.set_defaults(func=cmd_search)
 
     p_analyze = sub.add_parser("analyze", help="Market analysis")
-    p_analyze.add_argument("type", choices=["gaps", "market-gaps", "competitive", "persona", "trends", "stats"],
+    p_analyze.add_argument("type", choices=["gaps", "market-gaps", "competitive", "persona", "trends", "stats", "compare", "assess"],
                            help="Analysis type")
     p_analyze.add_argument("--category", help="Filter analysis to category (for competitive)")
+    p_analyze.add_argument("--json", action="store_true", help="Output as JSON")
+    p_analyze.add_argument("--ideas", nargs="+", help="Idea names to compare (for compare)")
+    p_analyze.add_argument("--product", help="Product name to assess (for assess)")
+    p_analyze.add_argument("--desc", help="Product description (for assess)")
     p_analyze.set_defaults(func=cmd_analyze)
 
     p_random = sub.add_parser("random", help="Get random ideas")
