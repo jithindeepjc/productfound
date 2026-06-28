@@ -23,18 +23,12 @@
     <img src="https://img.shields.io/badge/License-MIT-7c3aed" alt="MIT">
   </a>
   <a href="./skill/SKILL.md">
-    <img src="https://img.shields.io/badge/AI_Skill-v1.3.0-7c3aed" alt="AI Skill">
-  </a>
-  <a href="./cli/">
-    <img src="https://img.shields.io/badge/CLI-ready-7c3aed" alt="CLI">
+    <img src="https://img.shields.io/badge/AI_Skill-v3.0.0-7c3aed" alt="AI Skill v3">
   </a>
 </p>
 
 <p align="center">
   <a href="#why">Why</a> ·
-  <a href="#demo">Demo</a> ·
-  <a href="#quick-start">Quick Start</a> ·
-  <a href="#cli">CLI</a> ·
   <a href="#ai-skill">AI Skill</a> ·
   <a href="#dataset">Dataset</a>
 </p>
@@ -56,112 +50,38 @@ This is 1,000 of those ideas — extracted, categorized, tagged, and ranked. Not
 
 ---
 
-## Demo
-
-### Find underserved categories
-
-```
-$ productfound analyze gaps
-
-Tier                Ideas  Categories
-─────────────────  ─────  ─────────────────────────
-First-mover          ≤3    LegalTech, TravelTech, CleanTech
-Emerging            4-7    PropTech, CareerTech, Local Services
-Competitive         8-12   Fintech, Health, EdTech, MarTech
-Crowded             13+    DevTools, Ecommerce, Media, AI-Tools
-```
-
-### Stress-test your idea
-
-```
-$ productfound analyze validate --category Fintech --model SaaS
-
-Axis              Score  Signal
-───────────────  ─────  ──────────────────────────────────
-Gap Clarity          6  Exists but partially served
-Model Fit            8  Fits buyer and effort profile
-Effort Realism       4  Optimistic for solo founder
-Speed vs Runway      5  Survivable with bridge round
-
-Verdict: Validate further — Low confidence — Effort axis
-```
-
-### Explore randomly
-
-```
-$ productfound random --category First-mover
-
-  LegalFlow
-  Automated contract review for SMBs
-  SaaS · 3-6 months · Medium speed
-  Category: LegalTech (only 2 ideas exist)
-```
-
----
-
-## Quick Start
-
-```bash
-pip install productfound
-
-# What's underserved?
-productfound analyze gaps
-
-# Search for weekend projects
-productfound search --effort "Weekend Project"
-
-# Stress-test your idea
-productfound analyze validate --category Fintech --model SaaS
-```
-
----
-
-## CLI
-
-| Command | Description |
-|---------|-------------|
-| `productfound search` | Filter 1,000 ideas by category, model, effort, speed, tags, keyword |
-| `productfound analyze gaps` | Identify underserved categories |
-| `productfound analyze competitive` | Deep-dive into a specific category |
-| `productfound analyze persona` | Match ideas to builder personality |
-| `productfound analyze trends` | Surface model-tag-effort patterns |
-| `productfound analyze stats` | Full dataset distribution |
-| `productfound validate` | 4-axis stress-test with verdict |
-| `productfound random` | Explore with optional filters |
-| `productfound export` | Export to JSON or CSV |
-
-```bash
-productfound search --category DevTools --model Freemium --effort "Weekend Project"
-productfound analyze competitive --category Fintech
-productfound export --format json --output ideas.json
-```
-
-**Full reference:** [`cli/README.md`](./cli/)
-
----
-
 ## AI Skill
 
-This repository includes a self-contained skill for AI coding agents (Claude Code, OpenCode, Cursor, Copilot, Gemini CLI):
+This repository is a self-contained skill for AI coding agents (OpenCode, Claude Code, Cursor, Copilot, Gemini CLI):
 
 ```bash
 cp -r skill /path/to/your/skills/productfound-market-researcher
 ```
 
-The skill turns any agent into a market researcher. No install required. Ask:
+The skill turns any agent into a market researcher. No installs, no dependencies, no API keys. Ask:
 
-> *"What's the most underserved category?"*</br>
-> *"Validate my idea for a fintech SaaS"*</br>
-> *"Compare these three ideas"*</br>
+> *"What's the most underserved category?"*
+> *"Validate my idea for a fintech SaaS"*
+> *"Compare these three ideas"*
 > *"I've been building for two months — assess my market"*
 
-Includes 7 analysis types, persona self-selector, risk flag detection, and a 4-axis scoring rubric.
+Seven analysis types, persona self-selector, risk flag detection, confidence scoring, JSON output mode.
+
+| Analysis | What it does |
+|----------|-------------|
+| `gaps` | Find underserved categories and first-mover opportunities |
+| `validate` | 4-axis stress-test (Gap Clarity, Model Fit, Effort Realism, Speed vs Runway) |
+| `competitive` | Category density, dominant models, risk tags |
+| `persona` | Match ideas to builder profiles |
+| `trends` | Model/tag/effort pattern surfacing |
+| `compare` | Side-by-side scorecard across multiple ideas |
+| `assess` | Evaluate an existing product against the dataset |
 
 **Full documentation:** [`skill/SKILL.md`](./skill/SKILL.md)
 
 ---
 
-## Datasets
+## Dataset
 
 ### Ideas (1,000)
 
@@ -189,12 +109,6 @@ Real failed startups from around the world with structured data:
 | Africa | 2 | $350M | Execution |
 | Global | 1 | $200M | Fraud / Governance |
 
-```
-productfound postmortems search --region India
-productfound postmortems stats
-productfound postmortems compare India US
-```
-
 MIT license. Free. Open source.
 
 ---
@@ -202,70 +116,19 @@ MIT license. Free. Open source.
 ## Share
 
 <p align="center">
-  <a href="https://twitter.com/intent/tweet?text=I%20analyzed%201%2C000%20failed%20startups%20so%20you%20don%27t%20have%20to.%20Meet%20Productfound%20%E2%80%94%20a%20free%20CLI%20%2B%20AI%20skill%20that%20finds%20market%20gaps%20from%20real%20postmortems.&url=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound">
+  <a href="https://twitter.com/intent/tweet?text=Productfound%20%E2%80%94%20Market%20research%20from%201%2C000%20failed%20startups.%20AI%20skill%20that%20finds%20market%20gaps%20from%20real%20postmortems.&url=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound">
     <img src="https://img.shields.io/badge/X-000000?style=flat-square&logo=x&logoColor=white" alt="X">
   </a>
   <a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound&t=Productfound%20%E2%80%94%20Market%20research%20from%201%2C000%20failed%20startups">
     <img src="https://img.shields.io/badge/Hacker%20News-FF6600?style=flat-square&logo=ycombinator&logoColor=white" alt="HN">
   </a>
-  <a href="https://www.reddit.com/r/startups/submit?url=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound&title=Productfound%20%E2%80%94%20I%20analyzed%201%2C000%20failed%20startups%20so%20you%20can%20find%20market%20gaps%20before%20building">
+  <a href="https://www.reddit.com/r/startups/submit?url=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound&title=Productfound%20%E2%80%94%20Market%20research%20from%201%2C000%20failed%20startups">
     <img src="https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white" alt="Reddit">
   </a>
   <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fjithindeepjc%2Fproductfound">
     <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn">
   </a>
 </p>
-
-<details>
-<summary><b>Pre-written posts</b></summary>
-
-<br>
-
-**X / Twitter**
-
-```
-1/5 I analyzed 1,000 failed startups so you don't have to.
-The biggest killer isn't competition. It's building in a category where nobody
-failed before you. LegalTech has 2 ideas. DevTools has 14.
-
-2/5 Business model matters more than your idea. Freemium + Quick Cash = most
-survivable. Marketplace + Long Game = deadliest.
-
-3/5 Weekend projects exist. AI-Wrapper + Chrome Extension + Freemium = ship
-in 48 hours, revenue in 2 weeks.
-
-4/5 The 7 antipatterns: Cold Start, VC+Bootstrap conflict, Marketplace-weekend
-mismatch, regulatory blind spots, high churn with no lock-in, building for
-"everyone", speed mismatch.
-
-5/5 Full dataset + CLI + AI skill — free, open source.
-→ github.com/jithindeepjc/productfound
-```
-
-**Hacker News / Product Hunt**
-
-```
-Productfound — Market research from 1,000 failed startups
-
-I extracted 1,000 startup ideas from real failed postmortems into a searchable
-dataset tagged by category, business model, effort, speed, and risk flags.
-
-Includes a Python CLI (pip install productfound) and an AI skill.
-Seven analysis types: gaps, competitive, persona, trends, search, validate, score.
-```
-
-**Reddit (r/startups)**
-
-```
-I analyzed 1,000 failed startups and built a free tool to find market gaps
-
-1,000 ideas mapped to 28 categories, 18 business models, 142 tags. Derived from
-real failed startup postmortems — execution failures, not speculation.
-
-Free CLI + AI skill. → github.com/jithindeepjc/productfound
-```
-
-</details>
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: productfound-market-researcher
-version: 1.3.0
+version: 3.0.0
 description: >
   Market research analyst powered by the Productfound methodology — 1,000 startup
   ideas derived from real failed startup postmortems. Finds market gaps, validates
@@ -540,12 +540,7 @@ signal exists to act on the caution.
 
 ---
 
-## Programmatic Access
-
-Power users who want shell/pipeline access:
-- CLI: `./cli/` (or `pip install productfound`)
-- Same 9-field schema, same filters — outputs JSON
-- Skill and CLI are interchangeable
+## Structured Output
 
 For structured output in this session, say "give me JSON" and I'll format results
 as a parseable block instead of a table.
