@@ -1,6 +1,6 @@
 ---
 name: productfound-market-researcher
-version: 3.0.0
+version: 3.1.0
 description: >
   Market research analyst powered by the Productfound methodology — 1,000 startup
   ideas derived from real failed startup postmortems. Finds market gaps, validates
@@ -29,6 +29,13 @@ triggers:
   - compare my ideas
   - I've been building
   - help me get started
+  - what's underserved in India
+  - India market gaps
+  - cross-sector scan India
+  - India radar
+  - Karnataka opportunities
+  - India startup ideas
+  - sectors in India
 allowed-tools:
   - web_search
 ---
@@ -308,6 +315,9 @@ Resolve in one pass. No clarifying questions unless genuinely unresolvable.
 | "I've been building / I'm already in market" | `assess` | — |
 | "help me get started" | guided tutorial (3 steps) | — |
 | "hi / hello / what is this" | orientation response | — |
+| "India / what's underserved in India" | `india-radar` full scan | — |
+| "Karnataka / Bengaluru opportunities" | `india-radar` Karnataka-filtered | — |
+| "cross-sector / multiple sectors" | `india-radar` | `gaps` for dataset contrast |
 
 **Ambiguous intent:** run `gaps` — it generates the next question on its own.
 
@@ -389,6 +399,66 @@ correct?"
 
 ---
 
+## `india-radar` — Cross-sector scan (India-focused)
+
+When the user asks about India-specific opportunities, underserved sectors, or
+a region-specific scan, run the **Cross-Sector Scan** methodology.
+
+**Methodology:**
+1. Scan 10+ sectors against the Indian market
+2. Eliminate what already exists in India (dog cafes, dark stores, rage rooms, aquaponics, medspas)
+3. For each remaining: verify existence, timing signal, first-mover window, entry format, risk flag, Karnataka angle
+4. Present as summary table + top 3 recommendation
+
+**Reference data — 10 validated sectors:**
+
+| # | Sector | Concept | Window | Capital | Risk |
+|---|--------|---------|:------:|:-------:|------|
+| 1 | Agriculture | CSA Farm Box — pay a farm upfront for a weekly harvest share. Not a delivery service, a membership in that farm's yield. India has no farm-specific subscription format. | Open | Low | Yield inconsistency — members buy a farm share, not groceries |
+| 2 | CleanTech | Deposit Return System — deposit on beverage containers returned via reverse vending machines at retailers. Machines exist in India (ReAtmos, Coca-Cola Puri pilot) but no mandated DRS system tying them together. | 18–30 mo | Medium | Needs retailer network — design retailer economics first |
+| 3 | Sharing Economy | Commercial Tool Library — members borrow drills, tile cutters, concrete mixers via annual membership. India has volunteer repair cafes but no paid tool rental membership format. | Open | Low | Tool damage — solved with refundable deposit per tool |
+| 4 | Circular Economy | Repair Cafe (commercial layer) — Repair Cafe Collective India proved demand with 50+ volunteer workshops in Bengaluru/Hyderabad/Mumbai. No one has added a subscription model, fixed venue, or parts margin. | Open | Low | Volunteer community may resist commercialization |
+| 5 | Eldercare | Senior Co-Living — shared house with amenities, below luxury pricing. 340M Indians will be 60+ by 2050. Ashiana/Columbia Pacific target luxury (₹80L+). ₹15K–₹30K/mo format is unoccupied. | 18–36 mo | High | Medical emergency liability — needs hospital partnership |
+| 6 | Fashion | Clothing Rental Subscription (everyday) — Stage3/Flyrobe exist for occasion wear. No one has cracked monthly subscription for everyday premium wear (workwear, weekend). | 18–30 mo | Medium | Hygiene perception — clinical-grade cleaning mandatory |
+| 7 | Healthcare | Direct Primary Care — ₹2.5K/mo subscription for unlimited GP access, same-day appointments, WhatsApp consultation. No per-visit fee, no insurance. Urban preventive health demand is rising. | 12–24 mo | Low | Doctor supply — GPs trained for volume, not panel limits |
+| 8 | Education | Skill Swap / Time Bank (commercial) — earn credits by teaching, spend learning. No commercial platform exists in India. Creator economy normalized teaching as monetizable skill. | Open | Low | Cold start — must seed with curated founding cohort |
+| 9 | Automotive | EV Car Subscription — fixed monthly covers car + insurance + maintenance. Zoomcar is hourly rental. Leasing is corporate. No consumer subscription for EVs exists. | 12–24 mo | High | Capital intensity — owns cars until utilization >70% |
+| 10 | Real Estate | B2B Modular Furniture Subscription — offices subscribe to furniture, zero CapEx. Furlenco does consumer. No B2B format for co-working/serviced apartments/startup offices. | 12–18 mo | Medium | Reverse logistics — damage terms must be ironclad |
+
+**Output format:**
+
+```
+## India Radar — Cross-Sector Scan [recommendation]
+
+[Summary table: # · Sector · Concept · Window · Capital]
+
+Top 3 recommendation (lowest capital, longest window, highest India timing signal):
+1. [name] — one-liner why
+2. [name] — one-liner why
+3. [name] — one-liner why
+
+[For each recommended sector: 3-4 sentences — entry path, Karnataka angle, risk flag]
+
+**Karnataka angle:** [state-level read — which sectors have a Karnataka-specific advantage]
+**Next:** [one concrete action — pilot city, founding cohort size, anchor partner to approach]
+```
+
+**Intent routing for India queries:**
+
+| Intent signal | Action |
+|---------------|--------|
+| "what's underserved in India / India market gaps" | `india-radar` full 10-sector scan |
+| "Karnataka / Bengaluru opportunities" | `india-radar` filtered to Karnataka-relevant sectors (1, 3, 4, 5, 7, 9, 10) |
+| "cross-sector scan / opportunities in [sector] India" | `india-radar` focused on that sector + `competitive` for dataset comparison |
+| "validate [idea] for India" | `validate` using standard methodology, then cross-reference with `india-radar` — does the idea map to a sector in the scan? If yes, check India timing signal and entry format. If no, flag: "This sector isn't in the India scan — recommend web_search for India-specific analogues." |
+
+**Caveat for India Radar:** The India scan is a one-time cross-sector analysis. Market
+conditions change. Always pair with web_search for current regulatory, funding, and
+competitive landscape before committing to a recommendation. The `window` estimates
+are from mid-2026.
+
+---
+
 ## Output Format
 
 Every response follows this structure:
@@ -404,6 +474,7 @@ Every response follows this structure:
 [For score: **Weakest axis:** [name] — [improvement action]]
 [For compare: **Recommendation:** [best idea] — **Strongest axis:** [name] — **Risk:** [name]]
 [For assess: **Status:** On track / At risk / Pivot needed — **Pressure point:** [name]]
+[For india-radar: **Top pick:** [name] — **Window:** [months] — **Entry:** [format] — **Karnataka:** [angle]]
 
 **Next:** [one concrete action]
 ```
@@ -520,7 +591,7 @@ Surface **only** after `validate`, `assess`, or when user says "so this confirms
 > **Dataset limits:**
 > - Absence of ideas ≠ market opportunity. Gaps reflect postmortem patterns, not demand.
 > - Failed startup ≠ failed market. Most postmortems are execution failures, not market failures.
-> - Dataset skews English-language and Western. Indian, SEA, and African markets are underrepresented.
+> - Dataset skews English-language and Western. India now has dedicated cross-sector coverage (`india-radar` analysis type) but SEA and African markets remain underrepresented.
 > - Ideas are AI-generated from postmortems, not expert-curated. QA your own before committing.
 > - Schema is software/SaaS-biased. Hardware, physical products, and non-digital services are underrepresented.
 
@@ -533,7 +604,7 @@ signal exists to act on the caution.
 
 - Replace customer interviews or demand testing
 - Guarantee idea quality
-- Cover non-English startup ecosystems accurately
+- Cover non-English startup ecosystems accurately (India now has dedicated coverage via `india-radar`; other regions remain weak)
 - Provide real-time data (quarterly updates at best)
 - Produce Go verdict without 4-axis evidence
 - Analyze off-topic subjects (compare companies, non-startup ideas, personal advice)
