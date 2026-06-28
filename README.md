@@ -23,7 +23,7 @@
     <img src="https://img.shields.io/badge/License-MIT-7c3aed" alt="MIT">
   </a>
   <a href="./skill/SKILL.md">
-    <img src="https://img.shields.io/badge/AI_Skill-v3.0.0-7c3aed" alt="AI Skill v3">
+    <img src="https://img.shields.io/badge/AI_Skill-v3.1.0-7c3aed" alt="AI Skill v3.1">
   </a>
 </p>
 
@@ -76,6 +76,7 @@ Seven analysis types, persona self-selector, risk flag detection, confidence sco
 | `trends` | Model/tag/effort pattern surfacing |
 | `compare` | Side-by-side scorecard across multiple ideas |
 | `assess` | Evaluate an existing product against the dataset |
+| `india-radar` | Cross-sector scan of 10 India-specific opportunity spaces |
 
 **Full documentation:** [`skill/SKILL.md`](./skill/SKILL.md)
 
